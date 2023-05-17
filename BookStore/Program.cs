@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using BookStore.Data;
+using Microsoft.AspNetCore.Hosting;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
@@ -13,10 +15,18 @@ builder.Services
     .AddDefaultUI()
     .AddDefaultTokenProviders();
 
+
+
+
+builder.Services.AddScoped<RoleManager<IdentityRole>>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+AppDbInitializer.SeedRolesToDb(app).Wait();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
